@@ -11,12 +11,21 @@ interface VoiceRecorderProps {
 
 export default function VoiceRecorder({ onTranscriptionComplete }: VoiceRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
+  const [hasMicrophoneAccess, setHasMicrophoneAccess] = useState(false);
   const [silenceTimer, setSilenceTimer] = useState<NodeJS.Timeout | null>(null);
   const { connectToDeepgram, disconnectFromDeepgram, connectionState, realtimeTranscript } = useDeepgram();
 
   const handleStartRecording = async () => {
-    await connectToDeepgram();
-    setIsRecording(true);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setHasMicrophoneAccess(true);
+      stream.getTracks().forEach(track => track.stop()); // Stop the stream immediately after getting access
+      await connectToDeepgram();
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      alert('Unable to access the microphone. Please ensure you have granted permission.');
+    }
   };
 
   const handleStopRecording = () => {
@@ -27,14 +36,14 @@ export default function VoiceRecorder({ onTranscriptionComplete }: VoiceRecorder
   };
 
   useEffect(() => {
-    if (isRecording) {
+    if (isRecording && hasMicrophoneAccess) {
       if (silenceTimer) clearTimeout(silenceTimer);
       const timer = setTimeout(() => {
         handleStopRecording();
       }, 5000);
       setSilenceTimer(timer);
     }
-  }, [realtimeTranscript, isRecording]);
+  }, [realtimeTranscript, isRecording, hasMicrophoneAccess]);
 
   return (
     <div className="w-full">

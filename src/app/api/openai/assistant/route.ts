@@ -25,7 +25,14 @@ export async function POST(req: Request) {
     }
 
     const messages = await openai.beta.threads.messages.list(thread.id);
-    const assistantResponse = messages.data[0].content[0].text.value;
+    const lastMessage = messages.data[0];
+    let assistantResponse = '';
+
+    if (lastMessage.role === 'assistant' && lastMessage.content[0].type === 'text') {
+      assistantResponse = lastMessage.content[0].text.value;
+    } else {
+      throw new Error('Unexpected response format from OpenAI');
+    }
 
     return NextResponse.json({ response: assistantResponse });
   } catch (error) {

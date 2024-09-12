@@ -22,7 +22,7 @@ export default function TextEntry({ onSubmit }: TextEntryProps) {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded-md mb-2"
+        className="w-full p-2 border border-gray-300 rounded-md mb-2 text-black"
         rows={4}
         placeholder="Enter your feature request here..."
       />
