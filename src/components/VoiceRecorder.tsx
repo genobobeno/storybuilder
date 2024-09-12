@@ -1,12 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDeepgram } from '../lib/contexts/DeepgramContext';
 import { addDocument } from '../lib/firebase/firebaseUtils';
 import { motion } from 'framer-motion';
 
-export default function VoiceRecorder() {
+interface VoiceRecorderProps {
+  onTranscriptionComplete: (text: string) => void;
+}
+
+export default function VoiceRecorder({ onTranscriptionComplete }: VoiceRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
+  const [silenceTimer, setSilenceTimer] = useState<NodeJS.Timeout | null>(null);
   const { connectToDeepgram, disconnectFromDeepgram, connectionState, realtimeTranscript } = useDeepgram();
 
   const handleStartRecording = async () => {
@@ -14,21 +19,25 @@ export default function VoiceRecorder() {
     setIsRecording(true);
   };
 
-  const handleStopRecording = async () => {
+  const handleStopRecording = () => {
     disconnectFromDeepgram();
     setIsRecording(false);
-    
-    // Save the note to Firebase
-    if (realtimeTranscript) {
-      await addDocument('notes', {
-        text: realtimeTranscript,
-        timestamp: new Date().toISOString(),
-      });
-    }
+    if (silenceTimer) clearTimeout(silenceTimer);
+    onTranscriptionComplete(realtimeTranscript);
   };
 
+  useEffect(() => {
+    if (isRecording) {
+      if (silenceTimer) clearTimeout(silenceTimer);
+      const timer = setTimeout(() => {
+        handleStopRecording();
+      }, 5000);
+      setSilenceTimer(timer);
+    }
+  }, [realtimeTranscript, isRecording]);
+
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full">
       <button
         onClick={isRecording ? handleStopRecording : handleStartRecording}
         className={`w-full py-2 px-4 rounded-full ${
