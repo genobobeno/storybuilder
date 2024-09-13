@@ -1,11 +1,6 @@
-# Ansh & Riley Full-Stack Template
+# A simple Feature Request app
 
-This is a full-stack template project for Software Composers to create  applications with AI.
-
-## Getting started
-To create a new project, you go to `/paths`, choose from our list of Paths, and then use Cursor's Composer feature to quickly scaffold your project!
-
-You can also edit the Path's prompt template to be whatever you like!
+This was generated with Cursor & tested in Replit to leverage the OpenAI Assistant to generate rough drafts of Agile Stories.
 
 ## Technologies used
 This doesn't really matter, but is useful for the AI to understand more about this project. We are using the following technologies
