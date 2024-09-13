@@ -1,5 +1,13 @@
 import "./globals.css";
-import { DeepgramContextProvider } from '../lib/contexts/DeepgramContext';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Feature Request App",
+  description: "Submit and manage feature requests",
+};
 
 export default function RootLayout({
   children,
@@ -8,11 +16,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <DeepgramContextProvider>
-          {children}
-        </DeepgramContextProvider>
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }

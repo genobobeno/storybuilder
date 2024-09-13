@@ -45,38 +45,34 @@ export default function FeatureRequestForm() {
   };
 
   return (
-    <div className={`max-w-2xl mx-auto p-4 ${isComplete ? 'text-center' : ''}`}>
-      <h1 className="text-2xl font-semibold mb-4 text-gray-800">
-        {isComplete ? "Thank you for your Feature Request!" : "Please describe your Feature Request!"}
-      </h1>
-      {!isComplete && (
-        <form onSubmit={handleSubmit}>
-          <textarea
-            className="w-full p-2 border border-gray-300 rounded-md mb-2 text-gray-800 bg-white"
-            rows={4}
-            value={requestText}
-            onChange={(e) => setRequestText(e.target.value)}
-            placeholder="Enter your feature request here..."
-            disabled={isSubmitting}
-          />
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 disabled:bg-gray-400"
-            disabled={isSubmitting || !requestText.trim()}
-          >
-            Send Request
-          </button>
-        </form>
-      )}
+    <div className="max-w-2xl mx-auto p-4">
+      <h1 className="text-2xl font-semibold mb-4">Please describe your Feature Request!</h1>
+      <form onSubmit={handleSubmit}>
+        <textarea
+          className="w-full p-2 border border-gray-300 rounded-md mb-2"
+          rows={4}
+          value={requestText}
+          onChange={(e) => setRequestText(e.target.value)}
+          placeholder="Enter your feature request here..."
+          disabled={isSubmitting}
+        />
+        <button
+          type="submit"
+          className="w-full py-2 px-4 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600 disabled:bg-gray-400"
+          disabled={isSubmitting || !requestText.trim()}
+        >
+          Send Request
+        </button>
+      </form>
 
-      {submittedText && !isComplete && (
+      {submittedText && (
         <div className="mt-4 relative">
-          <p className="font-semibold text-gray-800">The following Feature Request was sent:</p>
-          <p className="italic mt-2 text-gray-700">{submittedText}</p>
+          <p className="font-semibold">The following Feature Request was sent:</p>
+          <p className="italic mt-2">{submittedText}</p>
           {isSubmitting && (
             <div className="absolute inset-0 bg-white bg-opacity-75 flex flex-col items-center justify-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mb-4"></div>
-              <p className="text-center text-gray-800">Sending Request...</p>
+              <p className="text-center">Sending Request...</p>
             </div>
           )}
         </div>
@@ -84,8 +80,8 @@ export default function FeatureRequestForm() {
 
       {isComplete && (
         <div className="mt-4 p-4 bg-green-100 border border-green-400 rounded-md">
-          <p className="text-green-700">
-            The process is complete. We appreciate your input!
+          <p className="text-center text-green-700">
+            Thank you for your request! The process is complete.
           </p>
         </div>
       )}
